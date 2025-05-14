@@ -7,44 +7,55 @@ using System.Threading.Tasks;
 
 namespace TestSistemaBancario
 {
+
     [TestClass]
     public class TestContaCaixinha
     {
         [TestMethod]
-        public void TestContaCaixinhaHerdaConta()
+        public void DeveConfirmarQueContaCaixinhaDerivaDeConta()
         {
             decimal saldoInicial = 1000;
             ContaCaixinha caixinha = new ContaCaixinha(saldoInicial);
-            Assert.IsTrue(typeof(Conta).IsAssignableFrom(caixinha.GetType()));
+
+            bool ehSubclasse = typeof(Conta).IsAssignableFrom(caixinha.GetType());
+            Assert.IsTrue(ehSubclasse);
         }
 
         [TestMethod]
-        public void TestDeposito()
+        public void DeveDepositarValorEAtualizarSaldoComBonus()
         {
             decimal saldoInicial = 1000;
             decimal valorDeposito = 100;
             ContaCaixinha caixinha = new ContaCaixinha(saldoInicial);
+
             caixinha.Depositar(valorDeposito);
-            Assert.AreEqual(caixinha.Saldo, 1101);
+
+            Assert.AreEqual(1101, caixinha.Saldo);
         }
 
         [TestMethod]
-        public void TestSaque()
+        public void DeveSacarValorEAtualizarSaldoCorretamente()
         {
             decimal saldoInicial = 1000;
             decimal saque = 105;
             ContaCaixinha caixinha = new ContaCaixinha(saldoInicial);
+
             caixinha.Sacar(saque);
-            Assert.AreEqual(caixinha.Saldo, 900);
+
+            Assert.AreEqual(895, caixinha.Saldo);
         }
 
         [TestMethod]
-        public void TestDepositarValorInferiorAUm()
+        public void DeveLancarExcecaoAoDepositarValorMenorQueUm()
         {
             decimal saldoInicial = 1000;
-            decimal valorDeposito = 0.9m;
+            decimal valorDeposito = 0.5m;
             ContaCaixinha caixinha = new ContaCaixinha(saldoInicial);
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => caixinha.Depositar(valorDeposito));
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+                caixinha.Depositar(valorDeposito)
+            );
         }
     }
+
 }
